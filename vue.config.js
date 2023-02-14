@@ -36,6 +36,16 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    // proxy: {
+    //   [process.env.VUE_APP_BASE_API]: {
+    //     target: process.env.VUE_APP_BASE_API,
+    //     secure: false, // 如果是不是https接口，可以不配置这个参数
+    //     changeOrigin: true, // 配置跨域
+    //     pathRewrite: {
+    //       ['^' + process.env.VUE_APP_BASE_API]: ''
+    //     }
+    //   }
+    // }
     before: require('./mock/mock-server.js')
   },
   configureWebpack: {
