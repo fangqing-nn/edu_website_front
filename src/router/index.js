@@ -70,6 +70,7 @@ export const constantRoutes = [
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
+
   {
     path: '/',
     component: Layout,
@@ -129,6 +130,25 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/TeacherList',
+    component: Layout,
+    redirect: '/TeacherList/page',
+    meta: {
+      title: '讲师列表管理',
+      icon: 'lock',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'page',
+        component: () => import('@/views/table/TeacherManagementPage'),
+        name: 'TeacherList',
+        meta: { title: '讲师管理列表', icon: 'dashboard', affix: true },
+        roles: ['admin']
+      }
+    ]
+  },
   {
     path: '/permission',
     component: Layout,
