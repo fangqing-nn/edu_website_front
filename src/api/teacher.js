@@ -59,3 +59,11 @@ export function removeTeacher(id) {
   })
 }
 
+export function uploadAvatar(data) {
+  return request({
+    url: 'http://localhost:8002/oss/file/uploadAvatar',
+    method: 'post',
+    data
+  })
+}
+

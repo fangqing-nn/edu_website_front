@@ -144,7 +144,7 @@ export const asyncRoutes = [
         path: 'page',
         component: () => import('@/views/table/TeacherManagementPage'),
         name: 'TeacherList',
-        meta: { title: '讲师管理列表', icon: 'dashboard', affix: true },
+        meta: { title: '讲师管理列表', icon: 'list', affix: true },
         roles: ['admin']
       }
     ]

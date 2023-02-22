@@ -108,7 +108,7 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.currentPage" :limit.sync="listQuery.rows" @pagination="getList" />
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @closed="resetTemp">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
         <el-form-item label="工作状态" prop="isDeleted">
           <el-select v-if="dialogStatus==='create'" v-model="temp.isDeleted" class="filter-item" placeholder="Please select">
@@ -136,9 +136,13 @@
             <el-option v-for="(item, index) in careerOptions.slice(1)" :key="item.career" :label="item.title" :value="item.title" />
           </el-select>
         </el-form-item>
+        <el-form-item label="照片">
+          <AvatarUpload :directory="directory" :image-url="temp.avatar===null?'':temp.avatar" @returnURL="getImageURL" />
+        </el-form-item>
         <el-form-item label="个人简历">
           <el-input v-model="temp.intro" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -167,6 +171,7 @@ import { fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import AvatarUpload from '@/components/AvatarUpload'
 import { fetchTeacherList, addTeacher, updateTeacher, removeTeacher } from '@/api/teacher'
 const typeOptions = [
   { isDeleted: '', display_name: '全部' },
@@ -191,7 +196,7 @@ const careerOptions = [
 
 export default {
   name: 'TeacherManagementPage',
-  components: { Pagination },
+  components: { Pagination, AvatarUpload },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -217,6 +222,9 @@ export default {
   },
   data() {
     return {
+      directory: {
+        id: ''
+      },
       gmtCreatePeriod: {},
       tableKey: 0,
       list: [],
@@ -246,7 +254,8 @@ export default {
         gmtCreate: undefined,
         name: '',
         isDeleted: '',
-        career: undefined
+        career: undefined,
+        avatar: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -280,6 +289,9 @@ export default {
     this.getList()
   },
   methods: {
+    getImageURL(imgURL) {
+      this.temp.avatar = imgURL
+    },
     getList() {
       this.listLoading = true
       fetchTeacherList(this.listQuery).then(response => {
@@ -320,12 +332,13 @@ export default {
         gmtCreate: new Date(),
         name: '',
         isDeleted: '',
-        career: undefined
+        career: undefined,
+        avatar: undefined
       }
     },
     // 新增讲师
     handleCreate() {
-      this.resetTemp()
+      // this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -357,9 +370,10 @@ export default {
       })
     },
     handleUpdate(row) {
-      console.log(row)
       this.temp = Object.assign({}, row) // copy obj
+      this.directory.id = this.temp.id
       console.log(this.temp)
+      console.log(this.directory)
       this.temp.gmtCreate = new Date(this.temp.gmtCreate)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
