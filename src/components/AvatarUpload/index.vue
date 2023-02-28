@@ -2,7 +2,7 @@
   <div>
     <el-upload
       class="avatar-uploader"
-      action="http://localhost:8002/oss/file/uploadAvatar"
+      :action="actionUrl"
       :show-file-list="false"
       :on-success="handleAvatarSuccess"
       :data="directory"
@@ -19,6 +19,10 @@
 export default {
   name: 'AvatarUpload',
   props: {
+    actionUrl: {
+      type: String,
+      required: true
+    },
     imageUrl: {
       type: String,
       default: ''
@@ -31,14 +35,19 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      url: this.imageUrl
+    }
+  },
   mounted() {
     // console.log(this.directory)
   },
   methods: {
     handleAvatarSuccess(res, file) {
-      this.imageUrl = res.data.urlPath
-      console.log(this.imageUrl)
-      this.$emit('returnURL', this.imageUrl)
+      this.url = res.data.urlPath
+      console.log(this.url)
+      this.$emit('returnURL', this.url)
     },
     beforeAvatarUpload(file) {
       console.log('我是beforeAvatarUpload')

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchTeacherList(query) {
   return request({
-    url: 'http://localhost:8001/edu/management/teacher/queryByPage',
+    url: 'http://localhost:81/edu/management/teacher/queryByPage',
     method: 'put',
     data: query.eduTeacherQuery,
     params: {
@@ -38,7 +38,7 @@ export function fetchPv(pv) {
 
 export function addTeacher(data) {
   return request({
-    url: 'http://localhost:8001/edu/management/teacher/add',
+    url: 'http://localhost:81/edu/management/teacher/add',
     method: 'post',
     data
   })
@@ -46,7 +46,7 @@ export function addTeacher(data) {
 
 export function updateTeacher(data) {
   return request({
-    url: 'http://localhost:8001/edu/management/teacher/update',
+    url: 'http://localhost:81/edu/management/teacher/update',
     method: 'post',
     data
   })
@@ -61,7 +61,7 @@ export function removeTeacher(id) {
 
 export function uploadAvatar(data) {
   return request({
-    url: 'http://localhost:8002/oss/file/uploadAvatar',
+    url: 'http://localhost:81/oss/file/uploadAvatar',
     method: 'post',
     data
   })

@@ -137,7 +137,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="照片">
-          <AvatarUpload :directory="directory" :image-url="temp.avatar===null?'':temp.avatar" @returnURL="getImageURL" />
+          <AvatarUpload :action-url="actionUrl" :directory="directory" :image-url.sync="temp.avatar===null?'':temp.avatar" @returnURL="getImageURL" />
         </el-form-item>
         <el-form-item label="个人简历">
           <el-input v-model="temp.intro" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
@@ -222,6 +222,7 @@ export default {
   },
   data() {
     return {
+      actionUrl: process.env.VUE_APP_OSS_API + 'oss/file/uploadAvatar',
       directory: {
         id: ''
       },
@@ -289,6 +290,7 @@ export default {
     this.getList()
   },
   methods: {
+
     getImageURL(imgURL) {
       this.temp.avatar = imgURL
     },
@@ -382,29 +384,29 @@ export default {
       })
     },
     updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          // this.nowtime = parseTime(new Date(tempData.gmtCreate), '{y}-{m}-{d}T{h}:{i}:{s}');
-          tempData.gmtCreate = parseTime(new Date(tempData.gmtCreate), '{y}-{m}-{d}T{h}:{i}:{s}')// new Date(tempData.gmtCreate) change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          console.log(tempData)
-          updateTeacher(tempData).then(() => {
-            const index = this.list.findIndex(v => v.id === this.temp.id)
-            // splice() 方法用于插入或删除数组中的元素。第三个参数为空则为删除
-            // index : 该参数是开始插入和（或）删除的数组元素的下标，必须是数字。
-            // howmany	可选。规定应该删除多少元素。必须是数字，但可以是 "0"。 如果未规定此参数，则删除从 index 开始到原数组结尾的所有元素。
-            // item1, ..., itemX	可选。要添加到数组的新元素
-            this.list.splice(index, 1, this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Update Successfully',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
+      // this.$refs['dataForm'].validate((valid) => {
+      // if (valid) {
+      const tempData = Object.assign({}, this.temp)
+      // this.nowtime = parseTime(new Date(tempData.gmtCreate), '{y}-{m}-{d}T{h}:{i}:{s}');
+      tempData.gmtCreate = parseTime(new Date(tempData.gmtCreate), '{y}-{m}-{d}T{h}:{i}:{s}')// new Date(tempData.gmtCreate) change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+      console.log(tempData)
+      updateTeacher(tempData).then(() => {
+        const index = this.list.findIndex(v => v.id === this.temp.id)
+        // splice() 方法用于插入或删除数组中的元素。第三个参数为空则为删除
+        // index : 该参数是开始插入和（或）删除的数组元素的下标，必须是数字。
+        // howmany	可选。规定应该删除多少元素。必须是数字，但可以是 "0"。 如果未规定此参数，则删除从 index 开始到原数组结尾的所有元素。
+        // item1, ..., itemX	可选。要添加到数组的新元素
+        this.list.splice(index, 1, this.temp)
+        this.dialogFormVisible = false
+        this.$notify({
+          title: 'Success',
+          message: 'Update Successfully',
+          type: 'success',
+          duration: 2000
+        })
       })
+      //  }
+      // })
     },
     handleDelete(row, index) {
       console.log(row.id)
